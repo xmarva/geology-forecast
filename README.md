@@ -1,4 +1,3 @@
-```markdown
 # Geological Layer-Depth Sequence Prediction
 
 ![Parallel Layers](imgs/parallel-geology.png)  
