@@ -13,5 +13,3 @@ wandb==0.19.1
 jupyterlab==4.1.6
 ipykernel==6.29.4
 transformers==4.47.0
-jupyter-notebook
-ipywidgets
