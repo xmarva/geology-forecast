@@ -131,3 +131,9 @@ In `lstm-kfold.ipynb` the validation score uses the last epoch's predictions whi
 1. Competition overview, data description and evaluation: [kaggle.com/competitions/geology-forecast-challenge-open](https://www.kaggle.com/competitions/geology-forecast-challenge-open).
 2. Alyaev and Elsheikh (2022), the NLL loss applied to geological boundaries: [doi:10.1029/2021EA002186](https://doi.org/10.1029/2021EA002186).
 3. Muhammad et al. (2024), geosteering with a particle filter, the use case named in the overview: [doi:10.2118/218444-MS](https://doi.org/10.2118/218444-MS).
+
+## License
+
+The code and notebooks in this repository are released under the [MIT License](LICENSE). This does not cover
+`imgs/1d-geology.png`, an image from the competition overview, or the competition data, which is CC BY 4.0 and is not
+stored here.
