@@ -1,6 +1,13 @@
-ARG TARGET=production
-FROM nvcr.io/nvidia/cuda-dl-base:24.12-cuda12.6-devel-ubuntu24.04 as production
-FROM ubuntu:24.04 as ci
+# Ubuntu 24.04 with Python 3.10 and the CUDA 12.1 build of PyTorch 2.5.1.
+# The CUDA runtime ships with the PyTorch wheel, so the host only needs an NVIDIA
+# driver and the NVIDIA Container Toolkit (docker run --gpus all).
+#
+#   docker build -t geology-forecast .
+#   docker run --rm -it --gpus all -p 8888:8888 --env-file .env \
+#       -v "$(pwd)":/geology-forecast geology-forecast
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
     software-properties-common \
@@ -33,29 +40,17 @@ RUN pip install --no-cache-dir \
     torch==${TORCH_VERSION} \
     --index-url ${TORCH_INDEX_URL}
 
-RUN git clone https://github.com/xmarva/geology-forecast.git
-WORKDIR /geology-forecast
-
-COPY requirements.txt .
-
-RUN if [ "$TARGET" = "ci" ]; then \
-    sed -i '/GPUtil/d' requirements.txt && \
-    git clone https://github.com/anderskm/gputil.git /tmp/gputil && \
-    cd /tmp/gputil && \
-    sed -i 's/description-file/description_file/g' setup.cfg && \
-    python3 setup.py install && \
-    cd - ; \
-    fi
-
-RUN pip install --no-cache-dir -r requirements.txt
+# torch==2.5.1 in requirements.txt is already satisfied by the CUDA build above
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh \
     && chmod +x /usr/local/bin/docker-entrypoint.sh
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+# The repository, with the competition data in data/, is mounted here at run time
+WORKDIR /geology-forecast
+EXPOSE 8888
 
-# docker build -t geology-gpu .
-# docker run -it --rm -p 8888:8888 --gpus all --env-file .env -v C:/Users/User/geology-forecast:/geology-forecast --entrypoint /bin/bash geology-gpu -c "/usr/local/bin/docker-entrypoint.sh && exec /bin/bash"
-# python -c "import torch; print(torch.cuda.is_available())"
-# jupyter notebook --ip=0.0.0.0 --no-browser --allow-root
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
