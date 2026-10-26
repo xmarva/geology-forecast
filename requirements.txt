@@ -3,7 +3,7 @@
 torch==2.5.1
 numpy==1.26.4
 pandas==2.2.3
-# xgboost_training.ipynb uses scipy.signal.cwt, which SciPy 1.15 removed
+# xgboost-per-position.ipynb uses scipy.signal.cwt, which SciPy 1.15 removed
 scipy==1.13.0
 scikit-learn==1.2.2
 matplotlib==3.7.5
