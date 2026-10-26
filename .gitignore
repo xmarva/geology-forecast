@@ -1,8 +1,21 @@
-.DS_Store
+# Competition data: download it with the Kaggle CLI (see README)
+data/
+*.zip
+
+# Training artefacts written by the notebooks
+*.pt
+submission*.csv
+wandb/
+
+# Secrets
 .env
-*.secret
 *.env
+*.secret
+
+# Python and Jupyter
+__pycache__/
 *.pyc
-*.ipynb_checkpoints
-*.__pycache__
-docker-entrypoint.sh
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
